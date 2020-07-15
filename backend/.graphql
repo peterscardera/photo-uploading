@@ -1,0 +1,22 @@
+type Photo {
+  id: ID!
+  name: String!
+  url: String!
+  description: String
+  category: PhotoCategory!
+  postedBy: User!
+}
+
+enum PhotoCategories {
+  SELFIE
+  PORTRAIT
+  ACTION
+  LANDSCAPE
+  GRAPHIC
+}
+
+type User {
+  gitHubLogin: ID!
+  name: String
+  avatar: String
+}
