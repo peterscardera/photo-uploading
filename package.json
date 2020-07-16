@@ -1,0 +1,27 @@
+{
+  "name": "graphql-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./backend/index.js",
+  "scripts": {
+    "start": "nodemon -e js,json,graphql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterscardera/photo-uploading.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/peterscardera/photo-uploading/issues"
+  },
+  "homepage": "https://github.com/peterscardera/photo-uploading#readme",
+  "dependencies": {
+    "apollo-server": "^2.15.0",
+    "graphql": "^15.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

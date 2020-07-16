@@ -48,7 +48,13 @@ enum PhotoCategories {
   GRAPHIC
 }
 
+"""
+A user who has been authorized by GitHub at least once
+"""
 type User {
+  """
+  The user's unique GitHub login
+  """
   gitHubLogin: ID!
   name: String
   avatar: String
@@ -58,6 +64,11 @@ type User {
     sorting: DataSort
   ): [Photo!]!
   inPhoto(filter: PhotoFilter, paging: DataPage, sorting: DataSort): [Photo!]!
+}
+
+type AuthPayLoad {
+  user: User!
+  token: String!
 }
 
 type Query {
@@ -75,9 +86,19 @@ type Mutation {
     description: String
     category: PhotoCategories = PORTRAIT
   ): Photo!
+  """
+  Authorizes a GitHub User
+  """
+  githubAuth(code: String!): AuthPayLoad!
+}
+
+type Subscription {
+  newPhoto(category: PhotoCategory): Photo!
+  newUser: User!
 }
 
 schema {
   query: Query
   mutation: Mutation
+  subscriptions: Subscription
 }
