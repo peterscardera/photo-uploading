@@ -2,26 +2,46 @@
 const { ApolloServer } = require("apollo-server");
 
 const typeDefs = `
+# 1. Add Photo type definition
+type Photo {
+  id: ID!
+  url: String!
+  name: String!
+  description: String
+}
+
+
 	type Query {
-		totalPhotos: Int!
+    totalPhotos: Int!
+    allPhotos: [Photo!]!
   }
+
   type Mutation {
-    postPhotos(
+    postPhoto(
       name: String!
       description: String
-    ):Boolean!
+    ):Photo!
   }
 `;
 var photos = [];
+// 1. A variable that we will increment for unique ids
+var _id = 0;
 
 const resolvers = {
   Query: {
     totalPhotos: () => photos.length,
+    allPhotos: () => photos,
   },
   Mutation: {
-    postPhotos(parent, args) {
-      photos.push(args);
-      return true;
+    //same name as schema and typeDef mutation
+    postPhoto(parent, args) {
+      var newPhoto = {
+        //since it requires an Id
+        id: _id++,
+        ...args,
+      };
+      photos.push(newPhoto);
+      return newPhoto;
     },
   },
 };
