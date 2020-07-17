@@ -8,8 +8,8 @@ type Photo {
   url: String!
   name: String!
   description: String
+  category: PhotoCategory!
 }
-
 
 	type Query {
     totalPhotos: Int!
@@ -17,11 +17,24 @@ type Photo {
   }
 
   type Mutation {
-    postPhoto(
-      name: String!
-      description: String
-    ):Photo!
+    postPhoto(input: PostPhotoInput!):Photo!
   }
+
+  enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+  }
+
+  input PostPhotoInput {
+    name: String!
+    category: PhotoCategory=PORTRAIT
+    description: String
+  }
+
+
 `;
 var photos = [];
 // 1. A variable that we will increment for unique ids
@@ -35,14 +48,28 @@ const resolvers = {
   Mutation: {
     //same name as schema and typeDef mutation
     postPhoto(parent, args) {
+      console.log(parent);
       var newPhoto = {
         //since it requires an Id
         id: _id++,
-        ...args,
+        //details for the photo, the name, description, and category are now nested within the input field
+        ...args.input,
       };
       photos.push(newPhoto);
       return newPhoto;
     },
+  },
+  //In this case, the parent represents the current Photo object that is being resolved
+  Photo: {
+    //the parent represents the current Photo object that is being resolved
+    // {
+    //   id: 0,
+    //   name: 'sample photo A',
+    //   category: 'PORTRAIT',
+    //   description: 'A sample photo for our dataset'
+    // }
+    
+    url: (parent) => `http://yoursite.com/img/${parent.id}.jpg`,
   },
 };
 
