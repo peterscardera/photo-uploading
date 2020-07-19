@@ -1,6 +1,7 @@
 const { ApolloServer } = require("apollo-server-express");
 const express = require("express");
-const expressPlayground = require("graphql-playground-middleware-express").default;
+const expressPlayground = require("graphql-playground-middleware-express")
+  .default;
 const { readFileSync } = require("fs");
 
 const resolvers = require("./resolvers");
@@ -9,12 +10,13 @@ const initDb = require("./DB_Connection/connection");
 require("dotenv").config();
 const typeDefs = readFileSync("./backend/typeDefs.graphql", "UTF-8");
 
-
 const app = express();
 
 initDb().then((resp) => {
   if (resp) {
-    const server = new ApolloServer({ typeDefs, resolvers });
+    //adding the connection to a context object
+    const context = { resp };
+    const server = new ApolloServer({ typeDefs, resolvers, context });
 
     //call `applyMiddleware()` to allow middleware mounted on the same path
     server.applyMiddleware({ app });
