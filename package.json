@@ -2,7 +2,7 @@
   "name": "graphql-practice",
   "version": "1.0.0",
   "description": "",
-  "main": "./backend/index.js",
+  "main": "./backend/server.js",
   "scripts": {
     "start": "nodemon -e js,json,graphql"
   },
@@ -18,8 +18,12 @@
   },
   "homepage": "https://github.com/peterscardera/photo-uploading#readme",
   "dependencies": {
-    "apollo-server": "^2.15.0",
-    "graphql": "^15.3.0"
+    "apollo-server-express": "^2.16.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql": "^15.3.0",
+    "graphql-playground-middleware-express": "^1.7.18",
+    "mongodb": "^3.5.9"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
