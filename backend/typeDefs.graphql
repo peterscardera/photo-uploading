@@ -1,5 +1,17 @@
 scalar DateTime
 
+type AuthPayLoad {
+  """
+  *USED AS A RESPONSE TO THE MUTATION WITH GITHUB CODE TO GET ACCESS TOKEN*
+  1. client asks giHub for code using client id and github sends code to OAuth.
+  2. client send graphql mutation with code.
+  3. API: Requests a GitHub access_token with credentials: client_id, client_secret, and client_code
+  We’ll also return that info to the client. The client will save the token locally and send it back to us with each request
+  """
+  token: String!
+  user: User!
+}
+
 type Photo {
   id: ID!
   url: String!
@@ -28,6 +40,7 @@ type Query {
 
 type Mutation {
   postPhoto(input: PostPhotoInput!): Photo!
+  githubAuth(code: String!): AuthPayLoad!
 }
 
 enum PhotoCategory {
