@@ -36,17 +36,22 @@ module.exports = {
     //! Return user data and their token
     return { user, token: access_token };
   },
+
+  async postPhoto(parent, args, { db, currentUser }) {
+    if (!currentUser) {
+      throw new Error("only authorized user can pst a photo");
+    }
+    const newPhoto = {
+      ...args.input,
+      userID: currentUser.githubLogin,
+      created: new Date(),
+    };
+
+    //!Insert the new photo and capture the id that the database created
+    const { insertedIds } = await db.collection("photos").insert(newPhoto);
+    // console.log('HERE0', insertedIds)
+    newPhoto.id = insertedIds[0];
+
+    return newPhoto;
+  },
 };
-
-
-
-// mutation {
-//     githubAuth(code:"CLIENT CODE") {
-//       token
-//       user {
-//         githubLogin
-//         name
-//         avatar
-//       }
-//     }
-//   }

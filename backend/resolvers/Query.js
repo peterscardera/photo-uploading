@@ -8,4 +8,6 @@ module.exports = {
   allPhotos: (parent, args, { db }) => db.collection("photos").find().toArray(),
 
   allUsers: (parent, args, { db }) => db.collection("users").find().toArray(),
+
+  me: (parent, args, { currentUser }) => currentUser,
 };
