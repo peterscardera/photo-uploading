@@ -1,9 +1,19 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import { ROOT_QUERY } from "./App";
 
+const ADD_FAKE_USERS_MUTATION = gql`
+  mutation addFakeUsers($count: Int!) {
+    addFakeUsers(count: $count) {
+      githubLogin
+      name
+      avatar
+    }
+  }
+`;
+
 const Users = () => {
-const { data, loading, error, refetch } = useQuery(ROOT_QUERY);
+  const { data, loading, error, refetch } = useQuery(ROOT_QUERY);
 
   if (loading) return "Loading users...";
   if (error) return `Error! ${error.message}`;
@@ -18,10 +28,23 @@ const { data, loading, error, refetch } = useQuery(ROOT_QUERY);
 };
 
 const UserList = ({ count, users, refetchUsers }) => {
+  const [addFakeU] = useMutation(ADD_FAKE_USERS_MUTATION);
+
   return (
     <div>
       <p>{count} Users</p>
       <button onClick={() => refetchUsers()}>Refetch</button>
+      {/* variables option enables us to specify any gql variables that the mutation requires. */}
+      <button
+        onClick={() =>
+          addFakeU({
+            variables: { count: 1 },
+            refetchQueries: [{query: ROOT_QUERY}] ,
+          })
+        }
+      >
+        Add Fake Users
+      </button>
       <ul>
         {users.map((user) => (
           <UserListItem
@@ -46,8 +69,6 @@ const UserListItem = ({ name, avatar }) => {
 
 export default Users;
 
-
-
 //! ------ Query component to useQuery hook-----
 
 //=============================== Apollo v2 - 2.5 =========================
@@ -61,6 +82,7 @@ export default Users;
 // import { Query } from "react-apollo";
 // import { ROOT_QUERY } from "./App";
 // <Query query={ROOT_QUERY} >
+//  {/*<Query query={ROOT_QUERY} pollInterval={1000}> Setting a pollInterval automatically refetches the data at a specified time (every second) */}
 //       {/* destructure result */}
 
 //       {({ data, loading, refetch}) =>
@@ -74,9 +96,7 @@ export default Users;
 
 //the query hook is recommended over the Query component
 
-
 //! ******No matter which way the result object has data and other utility functions below:
-
 
 //1. When the Query component mounts, Apollo Client creates an observable for our query. Our component subscribes to the result of the query via the Apollo Client cache.
 //2.First, we try to load the query result from the Apollo cache. If it's not in there, we send the request to the server.
@@ -101,3 +121,13 @@ export default Users;
 // updateQuery: ƒ (mapFn)
 // variables: {}
 // __proto__: Object
+
+//! ---------------the mutation function is not an object but an ARRAY
+
+// const r = useMutation(ADD_FAKE_USERS_MUTATION)
+// console.log(r[0]) // the mutation options go in argument
+
+// 0: ƒ (mutationFunctionOptions)
+// 1: {called: false, loading: false, client: ApolloClient}
+// length: 2
+// __proto__: Array(0)
