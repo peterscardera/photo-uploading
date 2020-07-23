@@ -8,7 +8,7 @@ const resolvers = require("./resolvers");
 const initDb = require("./DB_Connection/connection");
 
 require("dotenv").config();
-const typeDefs = readFileSync("./backend/typeDefs.graphql", "UTF-8");
+const typeDefs = readFileSync("./typeDefs.graphql", "UTF-8");
 
 const app = express();
 
