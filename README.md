@@ -52,7 +52,7 @@ mutation {
    }
    </pre>
 
-## once we reive the token we send it back with every request in the authorization header
+## Once the token is received; we send it back with every request in the authorization header
 
 to post photo (make sure auth token in header)
 
