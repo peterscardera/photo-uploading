@@ -1,28 +1,27 @@
 import React from "react";
-import { Query } from "react-apollo";
+import { useQuery } from "@apollo/client";
 import { ROOT_QUERY } from "./App";
 
 const Users = () => {
-  //!the Query component is sending the ROOT_QUERY to our GraphQL service and caching the result locally
+const { data, loading, error, refetch } = useQuery(ROOT_QUERY);
+
+  if (loading) return "Loading users...";
+  if (error) return `Error! ${error.message}`;
+
   return (
-    <Query query={ROOT_QUERY}>
-      {/* destructure result */}
-      {({ data, loading }) =>
-        loading ? (
-          <p>loading users...</p>
-        ) : (
-          <UserList count={data.totalUsers} users={data.allUsers} />
-        )
-      }
-    </Query>
-    
+    <UserList
+      count={data.totalUsers}
+      users={data.allUsers}
+      refetchUsers={refetch}
+    />
   );
 };
 
-const UserList = ({ count, users }) => {
+const UserList = ({ count, users, refetchUsers }) => {
   return (
     <div>
       <p>{count} Users</p>
+      <button onClick={() => refetchUsers()}>Refetch</button>
       <ul>
         {users.map((user) => (
           <UserListItem
@@ -47,7 +46,37 @@ const UserListItem = ({ name, avatar }) => {
 
 export default Users;
 
-//https://www.apollographql.com/docs/react/v2.5/essentials/queries/#the-query-component
+
+
+//! ------ Query component to useQuery hook-----
+
+//=============================== Apollo v2 - 2.5 =========================
+
+//!the Query component is sending the ROOT_QUERY to our GraphQL service and caching the result locally
+//root query would have import { gql } from "apollo-boost";
+
+//  -----package json
+// "apollo-boost": "^0.4.9",
+// "react-apollo": "^3.1.5",
+// import { Query } from "react-apollo";
+// import { ROOT_QUERY } from "./App";
+// <Query query={ROOT_QUERY} >
+//       {/* destructure result */}
+
+//       {({ data, loading, refetch}) =>
+//         loading ? (
+//           <p>loading users...</p>
+//         ) : (
+//           <UserList count={data.totalUsers} users={data.allUsers} refetchUsers={refetch} />
+//         )
+//       }
+//     </Query>
+
+//the query hook is recommended over the Query component
+
+
+//! ******No matter which way the result object has data and other utility functions below:
+
 
 //1. When the Query component mounts, Apollo Client creates an observable for our query. Our component subscribes to the result of the query via the Apollo Client cache.
 //2.First, we try to load the query result from the Apollo cache. If it's not in there, we send the request to the server.
@@ -56,7 +85,8 @@ export default Users;
 // the result data :
 //the reesults object also has several utility functions for pagination, refetching, and polling :
 
-// {(result) => console.log(results)}
+// !{(result) => console.log(results)}  OR const 'theresultobject = useQuery(ROOT_QUERY);
+
 // called: true
 // client: DefaultClient {defaultOptions: {…}, resetStoreCallbacks: Array(0), clearStoreCallbacks: Array(0), link: ApolloLink, cache: InMemoryCache, …}
 // data: undefined
@@ -64,7 +94,7 @@ export default Users;
 // fetchMore: ƒ (fetchMoreOptions)
 // loading: true
 // networkStatus: 1
-// refetch: ƒ (variables)
+// refetch: ƒ (variables) => ANOTHER QUERY WILL BE SENT TO THE GRAPHQL ENDPOINT TO REFETCH ANY DATA CHANGES**
 // startPolling: ƒ (pollInterval) ***
 // stopPolling: ƒ ()
 // subscribeToMore: ƒ (options)
