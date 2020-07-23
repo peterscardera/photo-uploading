@@ -1,6 +1,6 @@
 import React from "react";
 import Users from "./Users";
-import { gql } from "apollo-boost";
+import { gql } from '@apollo/client';;
 
 export const ROOT_QUERY = gql`
   query allUsers {
