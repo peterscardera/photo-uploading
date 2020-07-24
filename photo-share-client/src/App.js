@@ -1,23 +1,36 @@
 import React from "react";
+import { gql } from "@apollo/client";
+import { BrowserRouter } from "react-router-dom";
+
 import Users from "./Users";
-import { gql } from '@apollo/client';;
+import AuthUser from "./AuthUser";
 
 export const ROOT_QUERY = gql`
   query allUsers {
     totalUsers
     allUsers {
-      githubLogin
-      name
-      avatar
+      ...userInfo
     }
+    me {
+      ...userInfo
+    }
+  }
+
+  fragment userInfo on User {
+    githubLogin
+    name
+    avatar
   }
 `;
 
 const App = () => {
   return (
-    <>
-      <Users />
-    </>
+    <BrowserRouter>
+      <div>
+        <Users />
+        <AuthUser />
+      </div>
+    </BrowserRouter>
   );
 };
 
